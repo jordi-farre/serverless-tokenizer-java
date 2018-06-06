@@ -1,0 +1,19 @@
+service: serverless-tokenizer-java
+
+provider:
+  name: aws
+  runtime: java8
+  region: eu-west-1
+
+package:
+  artifact: build/distributions/hello.zip
+
+functions:
+  tokenizer:
+    handler: com.serverless.infrastructure.Tokenizer
+    events:
+      - http: 'POST /tokenize'
+  destokenizer:
+    handler: com.serverless.infrastructure.Destokenizer
+    events:
+      - http: 'POST /destokenize'
