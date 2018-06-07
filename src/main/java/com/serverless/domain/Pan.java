@@ -6,7 +6,6 @@ import com.amazonaws.services.kms.model.EncryptResult;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.PutObjectResult;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -34,14 +33,14 @@ public class Pan {
     }
 
     public Token encrypt(AWSKMS awskms, AmazonS3 amazonS3) {
-        String token = createTokenFrom(value);
+        String token = createTokenFrom();
         ByteBuffer encryptedPan = encrypt(awskms);
         save(amazonS3, token, encryptedPan);
         return Token.from(token);
     }
 
-    private String createTokenFrom(String pan) {
-        return UUID.fromString(value).toString();
+    private String createTokenFrom() {
+        return UUID.randomUUID().toString();
     }
 
     private ByteBuffer encrypt(AWSKMS awskms) {
