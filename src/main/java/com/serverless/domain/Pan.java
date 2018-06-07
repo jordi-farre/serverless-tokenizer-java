@@ -40,12 +40,8 @@ public class Pan {
         return Token.from(token);
     }
 
-    private void save(AmazonS3 amazonS3, String token, ByteBuffer encryptedPan) {
-        InputStream inputStream = new ByteArrayInputStream(encryptedPan.array());
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setSSEAlgorithm("AES256");
-        PutObjectRequest putObjectRequest = new PutObjectRequest(System.getenv("PCI_BUCKET"), token, inputStream, metadata);
-        amazonS3.putObject(putObjectRequest);
+    private String createTokenFrom(String pan) {
+        return UUID.fromString(value).toString();
     }
 
     private ByteBuffer encrypt(AWSKMS awskms) {
@@ -59,7 +55,11 @@ public class Pan {
         return encryptResult.getCiphertextBlob();
     }
 
-    private String createTokenFrom(String pan) {
-        return UUID.fromString(value).toString();
+    private void save(AmazonS3 amazonS3, String token, ByteBuffer encryptedPan) {
+        InputStream inputStream = new ByteArrayInputStream(encryptedPan.array());
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setSSEAlgorithm("AES256");
+        PutObjectRequest putObjectRequest = new PutObjectRequest(System.getenv("PCI_BUCKET"), token, inputStream, metadata);
+        amazonS3.putObject(putObjectRequest);
     }
 }
