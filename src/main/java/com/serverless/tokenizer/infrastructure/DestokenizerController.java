@@ -10,6 +10,8 @@ import com.serverless.tokenizer.domain.Pan;
 import com.serverless.tokenizer.domain.Token;
 import org.apache.log4j.Logger;
 
+import java.util.Optional;
+
 public class DestokenizerController implements RequestHandler<ApiGatewayRequestDTO, ApiGatewayResponseDTO> {
 
 	private static final Logger LOG = Logger.getLogger(DestokenizerController.class);
@@ -22,7 +24,9 @@ public class DestokenizerController implements RequestHandler<ApiGatewayRequestD
 	public ApiGatewayResponseDTO handleRequest(ApiGatewayRequestDTO input, Context context) {
 		DestokenizerRequestDTO destokenizerRequestDTO = objectMapper.readValue(input.getBody(), DestokenizerRequestDTO.class);
 		Token token = Token.from(destokenizerRequestDTO.getToken());
-		Pan pan = token.decrypt(awskms, amazonS3);
-		return ApiGatewayResponseDTO.from(200, objectMapper.writeValueAsString(DestokenizerResponseDTO.from(pan.getValue())));
+		Optional<Pan> pan = token.decrypt(awskms, amazonS3);
+		return pan
+				.map(pan1 -> ApiGatewayResponseDTO.from(200, objectMapper.writeValueAsString(DestokenizerResponseDTO.from(pan1.getValue()))))
+				.orElseGet(() -> ApiGatewayResponseDTO.from(400));
 	}
 }

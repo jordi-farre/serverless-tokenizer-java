@@ -6,12 +6,13 @@ import com.amazonaws.services.kms.model.DecryptResult;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.google.common.io.ByteStreams;
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -31,20 +32,20 @@ public class Token {
         return value;
     }
 
-    public Pan decrypt(AWSKMS awskms, AmazonS3 amazonS3) {
-        ByteBuffer byteBuffer = get(amazonS3);
-        String pan = decrypt(awskms, byteBuffer);
-        return Pan.from(pan);
+    public Optional<Pan> decrypt(AWSKMS awskms, AmazonS3 amazonS3) {
+        return get(amazonS3).map(byteBuffer -> {
+            String pan = decrypt(awskms, byteBuffer);
+            return Pan.from(pan);
+        });
     }
 
-    private ByteBuffer get(AmazonS3 amazonS3) {
+    private Optional<ByteBuffer> get(AmazonS3 amazonS3) {
         S3Object s3Object = amazonS3.getObject(System.getenv("PCI_BUCKET"), value);
         S3ObjectInputStream s3ObjectInputStream = s3Object.getObjectContent();
         try {
-            return ByteBuffer.wrap(ByteStreams.toByteArray(s3ObjectInputStream));
+            return Optional.of(ByteBuffer.wrap(IOUtils.toByteArray(s3ObjectInputStream)));
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -57,4 +58,6 @@ public class Token {
         DecryptResult decryptResult = awskms.decrypt(decryptRequest);
         return new String (decryptResult.getPlaintext().array(), UTF_8);
     }
+
+
 }

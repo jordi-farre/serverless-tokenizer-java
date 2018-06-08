@@ -10,8 +10,17 @@ public class ApiGatewayResponseDTO {
 		this.body = body;
 	}
 
+	private ApiGatewayResponseDTO(int statusCode) {
+		this.statusCode = statusCode;
+		this.body = null;
+	}
+
 	public static ApiGatewayResponseDTO from(int statusCode, String body) {
 		return new ApiGatewayResponseDTO(statusCode, body);
+	}
+
+	public static ApiGatewayResponseDTO from(int statusCode) {
+		return new ApiGatewayResponseDTO(statusCode);
 	}
 
 	public int getStatusCode() {
