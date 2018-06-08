@@ -23,10 +23,10 @@ package:
 
 functions:
   tokenizer:
-    handler: com.serverless.infrastructure.Tokenizer
+    handler: com.serverless.tokenizer.infrastructure.TokenizerController
     events:
       - http: 'POST /tokenize'
   destokenizer:
-    handler: com.serverless.infrastructure.Destokenizer
+    handler: com.serverless.tokenizer.infrastructure.DestokenizerController
     events:
       - http: 'POST /destokenize'

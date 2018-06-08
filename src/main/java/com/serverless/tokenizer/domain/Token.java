@@ -1,4 +1,4 @@
-package com.serverless.domain;
+package com.serverless.tokenizer.domain;
 
 import com.amazonaws.services.kms.AWSKMS;
 import com.amazonaws.services.kms.model.DecryptRequest;
@@ -10,7 +10,6 @@ import com.google.common.io.ByteStreams;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 

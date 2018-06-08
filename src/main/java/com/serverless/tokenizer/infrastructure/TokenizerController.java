@@ -1,4 +1,4 @@
-package com.serverless.infrastructure;
+package com.serverless.tokenizer.infrastructure;
 
 import com.amazonaws.services.kms.AWSKMS;
 import com.amazonaws.services.kms.AWSKMSClientBuilder;
@@ -6,13 +6,13 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.serverless.domain.Pan;
-import com.serverless.domain.Token;
+import com.serverless.tokenizer.domain.Pan;
+import com.serverless.tokenizer.domain.Token;
 import org.apache.log4j.Logger;
 
-public class Tokenizer implements RequestHandler<ApiGatewayRequestDTO, ApiGatewayResponseDTO> {
+public class TokenizerController implements RequestHandler<ApiGatewayRequestDTO, ApiGatewayResponseDTO> {
 
-	private static final Logger LOG = Logger.getLogger(Tokenizer.class);
+	private static final Logger LOG = Logger.getLogger(TokenizerController.class);
 
 	private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -25,5 +25,11 @@ public class Tokenizer implements RequestHandler<ApiGatewayRequestDTO, ApiGatewa
 		Token token = Pan.from(tokenizerRequestDTO.getPan())
 				.encrypt(awskms, amazonS3);
 		return ApiGatewayResponseDTO.from(200, objectMapper.writeValueAsString(TokenizerResponseDTO.from(token.getValue())));
+	}
+
+	public static void main(String[] args) {
+		int test = 5;
+		int test2 = (test + 7) % 10;
+		System.out.println(test2);
 	}
 }

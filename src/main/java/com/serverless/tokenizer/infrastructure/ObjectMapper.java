@@ -1,4 +1,4 @@
-package com.serverless.infrastructure;
+package com.serverless.tokenizer.infrastructure;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 

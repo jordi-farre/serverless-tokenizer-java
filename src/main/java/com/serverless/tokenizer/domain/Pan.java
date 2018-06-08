@@ -1,4 +1,4 @@
-package com.serverless.domain;
+package com.serverless.tokenizer.domain;
 
 import com.amazonaws.services.kms.AWSKMS;
 import com.amazonaws.services.kms.model.EncryptRequest;
