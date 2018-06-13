@@ -27,9 +27,4 @@ public class TokenizerController implements RequestHandler<ApiGatewayRequestDTO,
 		return ApiGatewayResponseDTO.from(200, objectMapper.writeValueAsString(TokenizerResponseDTO.from(token.getValue())));
 	}
 
-	public static void main(String[] args) {
-		int test = 5;
-		int test2 = (test + 7) % 10;
-		System.out.println(test2);
-	}
 }
